@@ -5,18 +5,31 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.daterangeselectioncalendar.databinding.ActivityMainBinding
 import dev.joshhalvorson.calendar_date_range_picker.calendar.model.CalendarEvent
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
+
+    private val barChartList = arrayListOf(
+        BarChartModel(4, 0, R.color.light_green),
+        BarChartModel(5, 5, R.color.light_orange),
+        BarChartModel(6, 5, R.color.light_blue),
+        BarChartModel(7, 5, R.color.light_cyan),
+        BarChartModel(6, 5, R.color.light_ash),
+    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,33 +90,18 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("LHW", "$lH   $lW")
 
-        val view1 = View(this)
-        view1.layoutParams = LinearLayout.LayoutParams(lW/3, LayoutParams.MATCH_PARENT)
-        view1.setBackgroundColor(getColor(R.color.purple_200))
-        binding.customizeBarChart.addView(view1)
-
-        val view2 = View(this)
-        view2.layoutParams = LinearLayout.LayoutParams(lW/5, LayoutParams.MATCH_PARENT)
-        view2.setBackgroundColor(getColor(R.color.purple_500))
-        view2.setMargins(5, 0,0,0)
-        binding.customizeBarChart.addView(view2)
-
-        val view3 = View(this)
-        view3.layoutParams = LinearLayout.LayoutParams(lW/6, LayoutParams.MATCH_PARENT)
-        view3.setBackgroundColor(getColor(R.color.purple_700))
-        view3.setMargins(5, 0,0,0)
-        binding.customizeBarChart.addView(view3)
-
-        val view4 = View(this)
-        view4.layoutParams = LinearLayout.LayoutParams(lW/7, LayoutParams.MATCH_PARENT)
-        view4.setBackgroundColor(getColor(R.color.purple_200))
-        view4.setMargins(5, 0,0,0)
-        binding.customizeBarChart.addView(view4)
-
-        val view5 = View(this)
-        view5.layoutParams = LinearLayout.LayoutParams(lW/8, LayoutParams.MATCH_PARENT)
-        view5.setBackgroundColor(getColor(R.color.purple_700))
-        view5.setMargins(5, 0,0,0)
-        binding.customizeBarChart.addView(view5)
+        barChartList.onEach {
+            val view = View(this)
+            view.layoutParams = LinearLayout.LayoutParams(lW / it.layoutWidth, LayoutParams.MATCH_PARENT)
+            view.setMargins(it.margin, 0, 0, 0)
+            view.setBackgroundColor(getColor(it.color))
+            binding.customizeBarChart.addView(view)
+        }
     }
 }
+
+data class BarChartModel(
+    val layoutWidth: Int,
+    val margin: Int,
+    val color: Int,
+)
